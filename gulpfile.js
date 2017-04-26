@@ -14,6 +14,7 @@ var nugetRestore = require('gulp-nuget-restore');
 var fs = require('fs');
 var unicorn = require("./scripts/unicorn.js");
 var habitat = require("./scripts/habitat.js");
+var slnParser = require("./scripts/slnParser.js");
 var yargs = require("yargs").argv;
 
 module.exports.config = config;
@@ -37,6 +38,19 @@ gulp.task("deploy", function (callback) {
     "02-Nuget-Restore",
     "03-Publish-All-Projects",
     "04-Apply-Xml-Transform",
+    callback);
+});
+
+gulp.task("speedPublish", function (callback) {
+  config.runCleanBuilds = true;
+  return runSequence(
+    //"01-Copy-Sitecore-License",
+    //"02-Nuget-Restore",
+    //"03-Publish-All-Projects",
+    "03a-Publish-InWork-Projects",
+    //"04-Apply-Xml-Transform",
+    "05a-Sync-Unicorn-InWork-Configurations",
+    //"06-Deploy-Transforms",
 	callback);
 });
 
@@ -61,6 +75,12 @@ gulp.task("03-Publish-All-Projects", function (callback) {
     "Publish-Foundation-Projects",
     "Publish-Feature-Projects",
     "Publish-Project-Projects", callback);
+});
+
+gulp.task("03a-Publish-InWork-Projects", function (callback) {
+  return runSequence(
+    "Build-Solution",
+    "Publish-InWork-Projects", callback);
 });
 
 gulp.task("04-Apply-Xml-Transform", function () {
@@ -93,7 +113,18 @@ gulp.task("05-Sync-Unicorn", function (callback) {
   var options = {};
   options.siteHostName = habitat.getSiteUrl();
   options.authenticationConfigFile = config.websiteRoot + "/App_config/Include/Unicorn/Unicorn.UI.config";
+  options.configurations = "";
 
+  unicorn(function () { return callback() }, options);
+});
+
+gulp.task("05a-Sync-Unicorn-InWork-Configurations", function (callback) {
+  var options = {};
+  options.siteHostName = habitat.getSiteUrl();
+  options.authenticationConfigFile = config.websiteRoot + "/App_config/Include/Unicorn/Unicorn.UI.config";
+  var solution = "./" + config.solutionName + ".sln";
+  var c = slnParser.getProjectNames(solution);
+  options.configurations = config.unicornConfigurationsInWorkList;
   unicorn(function() { return callback() }, options);
 });
 
@@ -159,6 +190,16 @@ var publishProject = function (location, dest) {
       return publishStream(stream, dest);
     }));
 }
+
+gulp.task("Publish-InWork-Projects", function () {
+  dest = config.websiteRoot;
+  console.log("publish to " + dest + " folder");
+  return gulp.src(config.projectsInWorkList)
+    .pipe(foreach(function (stream, file) {
+      console.log(file);
+      return publishStream(stream, dest);
+    }));
+});
 
 var publishProjects = function (location, dest) {
   dest = dest || config.websiteRoot;

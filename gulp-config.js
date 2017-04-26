@@ -8,7 +8,10 @@ module.exports = function () {
     buildConfiguration: "Debug",
     buildPlatform: "Any CPU",
     publishPlatform: "AnyCpu",
-    runCleanBuilds: false
+    runCleanBuilds: false,
+    projectsInWorkList: ["src\\Project\\Habitat\\code\\Sitecore.Habitat.Website.csproj",
+                        "src\\Project\\Common\\code\\Sitecore.Common.Website.csproj"],
+    unicornConfigurationsInWorkList: "Project.Habitat.Website^Sitecore.Common.Website"
   };
   return config;
 }
