@@ -47,22 +47,22 @@
 						NOTE: if you do not alter the default values you can remove this entirely and use the defaults set in Unicorn.Users.config
 						
 						removeOrphans:
-						If you set RemoveOrphans to true, role syncing will delete matching roles that are not serialized, like item syncing does.
-						If set to false, roles are only ever added or updated (similar to New Items Only item syncing but updates are also synced)
+						If you set RemoveOrphans to true, user syncing will delete matching users that are not serialized, like item syncing does.
+						If set to false, users are only ever added or updated (similar to New Items Only item syncing but updates are also synced)
 					
 						defaultPassword:
 						When NEW users are deserialized, their passwords will be set to this value. 
 						If the value is set to "random," the password will be set to a long randomly generated value, otherwise the literal value is used.
 						In "random" mode, it is required to have an admin reset the user's password before it can be used.
 			
-    					minPasswordLength:
-					    If defaultPassword is not random, this settings defines the minimum accepted password length when deserializing a user.
-					    Default is 8 and must be larger than 0.
+						minPasswordLength:
+						If defaultPassword is not random, this settings defines the minimum accepted password length when deserializing a user.
+						Default is 8 and must be larger than 0.
 			
 						If a user already exists in Sitecore, when it is deserialized its password will not be altered.
 					-->
-                    <userSyncConfiguration removeOrphans="true" defaultPassword="random" minPasswordLength="8" type="Unicorn.Users.Loader.DefaultUserSyncConfiguration, Unicorn.Users" singleInstance="true" />
-                </configuration>
+					<userSyncConfiguration removeOrphans="true" defaultPassword="random" minPasswordLength="8" type="Unicorn.Users.Loader.DefaultUserSyncConfiguration, Unicorn.Users" singleInstance="true" />
+				</configuration>
 			</configurations>
 		</unicorn>
 	</sitecore>

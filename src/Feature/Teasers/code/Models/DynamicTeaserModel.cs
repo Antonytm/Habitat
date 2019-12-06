@@ -10,7 +10,7 @@
   {
     private DynamicTeaserItem[] _items;
 
-    public DynamicTeaserModel([NotNull] Item dynamicTeaser)
+    public DynamicTeaserModel(Item dynamicTeaser)
     {
       if (dynamicTeaser == null)
       {
@@ -40,7 +40,7 @@
 
     private DynamicTeaserItem[] CreateDynamicTeaserItems()
     {
-      var childItems = this.Item.Children.Where(i => i.IsDerived(Templates.TeaserHeadline.ID)).ToArray();
+      var childItems = this.Item.Children.Where(i => i.DescendsFrom(Templates.TeaserHeadline.ID)).ToArray();
       DynamicTeaserItem[] returnItems = {};
       if (childItems.Any())
       {
